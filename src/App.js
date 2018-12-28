@@ -1,26 +1,54 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import './App.css'
+import Portfolio from './Portfolio'
+import User from './User'
+import DialogWindow from "./DialogWindow";
 
 class App extends Component {
+
+    state = {
+        vk: {
+            name: '',
+            photo: '',
+            read:false
+        },
+    }
+
+    VKOnAuth = (data) => {
+        this.setState((state)=> {
+            let newVk = state.vk
+            newVk.name =`${data['first_name']} ${data['last_name']}`
+            newVk.photo = data['photo']
+            newVk.read = true
+
+            return {...state, vk:newVk}
+        })
+    }
+
   render() {
+
+      const login = () => <User vk={this.state.vk}/>;
+      const portfolio = () => <Portfolio VKOnAuth={this.VKOnAuth} vk={this.state.vk} />;
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+        <section>
+            <Router>
+                <div>
+                    <nav>
+                        <ul>
+                            <li><Link to="/">Portfolio</Link></li>
+                            {/*<li><Link to="/login">User</Link></li>*/}
+
+                        </ul>
+                    </nav>
+                    <h1>Генератор портфолио</h1>
+                    <Route path="/" render={portfolio}/>
+                    {/*<Route path="/login" render={login}/>*/}
+                </div>
+            </Router>
+
+        </section>
     );
   }
 }
