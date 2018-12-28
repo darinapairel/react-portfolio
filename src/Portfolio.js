@@ -35,7 +35,7 @@ export default class Portfolio extends React.Component{
 
         return(
             <div>
-                <DialogWindow childElm={<User/>} btnText="Редактировать"/>
+                <DialogWindow childElm={<User vk = {this.props.vk}/>} btnText="Редактировать"/>
                 <nav>
                     <ul>
                         <a href="#home"><li>Главная</li></a>

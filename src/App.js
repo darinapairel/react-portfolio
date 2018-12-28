@@ -19,20 +19,29 @@ class App extends Component {
     }
 
     VKOnAuth = (data) => {
-        this.setState((state)=> {
-            let newVk = state.vk
-            newVk.name =`${data['first_name']} ${data['last_name']}`
-            newVk.photo = data['photo']
-            newVk.read = true
-            console.log('VKOnAuth ', newVk)
+        let newVk = {...this.state.vk};
+       
+        newVk.name =`${data['first_name']} ${data['last_name']}`;
+        newVk.photo = data['photo'];
+        newVk.read = true;
 
-            return {...state, vk:newVk}
-        })
+        this.setState({...this.state, vk: newVk});
+
+            
+        // this.setState((state)=> {
+
+        //     let newVk = state.vk
+        //     newVk.name =`${data['first_name']} ${data['last_name']}`
+        //     newVk.photo = data['photo']
+        //     newVk.read = true
+
+        //     return {...state, vk:newVk}
+        // })
         console.log('state ', this.state)
     }
 
   render() {
-      console.log('this.state.vk', this.state.vk)
+
       const login = () => <User vk={this.state.vk}/>;
       const portfolio = () => <Portfolio VKOnAuth={this.VKOnAuth} vk={this.state.vk} />;
 
