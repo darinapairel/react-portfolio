@@ -13,12 +13,8 @@ export default class User extends React.Component{
                 read: false,
                 gitRepos: []
             },
-            vk: {
-                name: '',
-                photo: '',
-                read:false
-            }
         }
+        console.log('props', props)
     }
 
 
@@ -56,13 +52,15 @@ export default class User extends React.Component{
     }
 
     render(){
+        console.log('this.props', this.props)
+
         /*
          github info + submit change
         {
-                    (this.state.Vk.photo!=="" && this.state.Vk.name!=="" )?
+                    (this.props.vk.photo!=="" && this.props.vk.name!=="" )?
                     <div>
-                        <img src={this.state.Vk.photo} alt="user photo"/>
-                        <input type="text" defaultValue={this.state.Vk.name} />
+                        <img src={this.props.vk.photo} alt="user photo"/>
+                        <input type="text" defaultValue={this.props.vk.name} />
                         <DialogWindow childElm={<GitHubAuth gitFetchUser={this.gitFetchUser}/>} btnText={"Добавить github"}/>
                     </div>
                     :
@@ -72,16 +70,19 @@ export default class User extends React.Component{
                 {this.state.github.gitRepos.map((r, i) => { return <a key={i} style={{display: 'block', width: '100%'}} href={r.html_url}>{r.name}</a> })}
                 <button onClick={this.props.onSubmitUser}></button>
          */
-        return(
-            (this.state.vk.photo !== "" && this.state.vk.name !== "") ?
-                <div>
-                    <img src={this.state.vk.photo} alt="user photo"/>
-                    <input type="text" defaultValue={this.state.vk.name}/>
-                    <DialogWindow childElm={<GitHubAuth gitFetchUser={this.gitFetchUser}/>}
-                                  btnText={"Добавить github"}/>
-                </div> :
-                <div>Зарегистрироваться</div>
-         )
+        if (this.props.vk !== undefined)
+            return(
+                (this.props.vk.photo !== "" && this.props.vk.name !== "") ?
+                    <div>
+                        <img src={this.props.vk.photo} alt="user photo"/>
+                        <input type="text" defaultValue={this.props.vk.name}/>
+                        <DialogWindow childElm={<GitHubAuth gitFetchUser={this.gitFetchUser}/>}
+                                    btnText={"Добавить github"}/>
+                    </div> :
+                    <div>Зарегистрироваться</div>
+            )
+        else 
+            return null;
     }
 
 }

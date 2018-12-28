@@ -7,12 +7,15 @@ import DialogWindow from "./DialogWindow";
 
 class App extends Component {
 
-    state = {
-        vk: {
-            name: '',
-            photo: '',
-            read:false
-        },
+    constructor(props) {
+        super(props)
+        this.state = {
+            vk: {
+                name: '',
+                photo: '',
+                read:false
+            }
+        }
     }
 
     VKOnAuth = (data) => {
@@ -21,13 +24,15 @@ class App extends Component {
             newVk.name =`${data['first_name']} ${data['last_name']}`
             newVk.photo = data['photo']
             newVk.read = true
+            console.log('VKOnAuth ', newVk)
 
             return {...state, vk:newVk}
         })
+        console.log('state ', this.state)
     }
 
   render() {
-
+      console.log('this.state.vk', this.state.vk)
       const login = () => <User vk={this.state.vk}/>;
       const portfolio = () => <Portfolio VKOnAuth={this.VKOnAuth} vk={this.state.vk} />;
 
