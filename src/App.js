@@ -26,23 +26,12 @@ class App extends Component {
         newVk.read = true;
 
         this.setState({...this.state, vk: newVk});
-
-            
-        // this.setState((state)=> {
-
-        //     let newVk = state.vk
-        //     newVk.name =`${data['first_name']} ${data['last_name']}`
-        //     newVk.photo = data['photo']
-        //     newVk.read = true
-
-        //     return {...state, vk:newVk}
-        // })
         console.log('state ', this.state)
     }
 
   render() {
 
-      const login = () => <User vk={this.state.vk}/>;
+
       const portfolio = () => <Portfolio VKOnAuth={this.VKOnAuth} vk={this.state.vk} />;
 
     return (
@@ -52,13 +41,10 @@ class App extends Component {
                     <nav>
                         <ul>
                             <li><Link to="/">Portfolio</Link></li>
-                            {/*<li><Link to="/login">User</Link></li>*/}
-
                         </ul>
                     </nav>
                     <h1>Генератор портфолио</h1>
                     <Route path="/" render={portfolio}/>
-                    {/*<Route path="/login" render={login}/>*/}
                 </div>
             </Router>
 
