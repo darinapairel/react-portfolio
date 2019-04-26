@@ -1,25 +1,29 @@
 import React from 'react'
 
-export default class DialogWindow extends React.Component{
-    componentDidMount(){
-        let butOpen = this.refs["dialog__open"],
-            butClose = this.refs["dialog__close"],
-            dialog = this.refs["dialog"]
+// material-ui imports
+import Button from '@material-ui/core/Button'
+import Close from '@material-ui/icons/Close'
+import { withStyles } from '@material-ui/core/styles';
+import theme from './theme.js'
 
-        butClose.addEventListener( "click", () => dialog.close() )
-        butOpen.addEventListener( "click", () =>  dialog.showModal() )
-
+class DialogWindow extends React.Component{
+    btnOpen(){
+        document.getElementsByClassName("dialog__animation")[0].showModal()
+    }
+    btnClose(){
+        document.getElementsByClassName("dialog__animation")[0].close()
     }
     render(){
-        const {childElm, btnText} = this.props
+        const {childElm, btnText, styleForButton} = this.props
         return(
             <div>
-                <button ref={'dialog__open'} className="dialog__open">{btnText}</button>
-                <dialog ref={'dialog'} className="dialog__animation">
-                    <button ref={'dialog__close'} className="dialog__close">x</button>
+                <Button ref={'dialog__open'}  onClick={this.btnOpen} className={`dialog__open ${styleForButton}`}>{btnText}</Button>
+                <dialog ref={'dialog'} className={`dialog__animation`}>
+                    <Button ref={'dialog__close'} onClick={this.btnClose} className={`dialog__close`}><Close className={this.props.classes.text}/></Button>
                     {childElm}
                 </dialog>
             </div>
         )
     }
 }
+export default withStyles(theme)(DialogWindow)
