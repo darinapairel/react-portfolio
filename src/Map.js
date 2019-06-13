@@ -87,23 +87,23 @@ class Map extends React.Component{
 
         var map;
         const google = window.google;
+        if (google !== undefined){
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 8
+            });
 
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: -34.397, lng: 150.644},
-            zoom: 8
-        });
-
-        setTimeout(() => {
-            this.setState({...this.state, map: map})
-            this.buildMarkers(map)
-        }, 1200)
-
+            setTimeout(() => {
+                this.setState({...this.state, map: map})
+                this.buildMarkers(map)
+            }, 1200)
+        }
     }
 
     render(){
 
         return(
-            <div id={'map'} style={{width: '600px', height: '600px'}} />
+            <div id={'map'} style={{width: '70%', height: 'auto'}} />
         )
     }
 }

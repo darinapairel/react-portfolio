@@ -27,11 +27,13 @@ const theme = createMuiTheme({
     palette: {
         primary: {
             main: '#fff',
-        },
-        secondary: {
-            main: '#311b92',
+            dark: 'dodgerblue'
         },
         type:"dark",
+        background:{
+            paper: 'dodgerblue',
+            default:"dodgerblue"
+        }
     },
     link: {
         listStyleType: "none",
@@ -51,8 +53,42 @@ const theme = createMuiTheme({
     bigAvatar: {
         margin: 10,
         width: 300,
-        height: 300
+        height: 300,
     },
+    avatar:{
+        borderRadius: "100%"
+    },
+    inputSel:{
+        position: "absolute"
+    },
+    input:{
+        height:100
+    },
+    rootSel:{
+        background: "#0483ff"
+    },
+    selCol:{
+        background: "#0483ff"
+    },
+    tagsContainer:{
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        padding:"20px",
+        height: "40px",
+        alignItems: "center",
+        boxSizing: "content-box",
+        backgroundColor: "#0483ff"
+    },
+    tag:{
+        margin:"20px"
+    },
+    card:{
+        width: 320,
+        marginTop: 25,
+        background: "dodgerblue"
+    },
+    cardContent:{flex: '1 0 auto',},
     typography: { useNextVariants: true, htmlFontSize: 10 }
 
 });

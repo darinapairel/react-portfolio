@@ -1,25 +1,31 @@
 import React from 'react'
+import './styleUser.css'
+import Select from 'react-select/lib/Creatable'
 
 // components import
 import {VkAuth} from './VkAuth'
 
 // material-ui imports
-import ButtonBase from '@material-ui/core/ButtonBase'
+import Button from '@material-ui/core/Button'
 import Avatar from '@material-ui/core/Avatar'
-import Grid from '@material-ui/core/Grid';
-import InputBase from '@material-ui/core/InputBase';
-import FilledInput from '@material-ui/core/FilledInput';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-import { withStyles } from '@material-ui/core/styles';
-import theme from './theme.js'
+import FilledInput from '@material-ui/core/FilledInput'
+import Typography from '@material-ui/core/Typography'
+import TextField from '@material-ui/core/TextField'
 
 
 class User extends React.Component{
     constructor(props) {
         super(props)
-        this.handleSave = this.handleSave.bind(this);
+        this.state = {
+            langs: [],
+            inputValue: ''
+        }
+
+        this.handleSave = this.handleSave.bind(this)
+        this.handleInputChange = this.handleInputChange.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+        this.deleteUserInfo = this.deleteUserInfo.bind(this)
+
     }
 
     handleSave(){
@@ -29,48 +35,67 @@ class User extends React.Component{
             age: Number(document.getElementsByClassName("user_inp__age")[0].firstElementChild.value),
             address: document.getElementsByClassName("user_inp__address")[0].firstElementChild.value,
             qual: document.getElementsByClassName("user_inp__qual")[0].firstElementChild.value,
+            phone: document.getElementsByClassName("user_inp__phone")[0].firstElementChild.value,
+            mail: document.getElementsByClassName("user_inp__mail")[0].firstElementChild.value,
+            langs: this.state.langs
         })
     }
 
     deleteUserInfo(){
-        localStorage.removeItem("name");
-        localStorage.removeItem("read");
-        localStorage.removeItem("photo");
-        localStorage.removeItem("age");
-        localStorage.removeItem("address");
-        localStorage.removeItem("qual");
-        localStorage.removeItem("gitBio");
-        localStorage.removeItem("gitRepos");
-        localStorage.removeItem("gitLogin");
+        localStorage.removeItem(`user_${this.props.current_uid}`)
 
 
         document.getElementsByClassName("saveBtn")[0].disabled = true;
     }
+    handleChange = (value, actionMeta) => {
+        let val = value.map(arr=>arr['value'])
+        this.setState({ langs: value });
+    };
+    handleInputChange = (inputValue) => {
+        this.setState({ inputValue });
+    };
+
     render() {
+        let option = [];
+        this.props.data.pLangs.forEach(lang=>{
+            let obj = {};
+            obj.value = lang.toLowerCase();
+            obj.label = lang;
+            option.push(obj);
+            return option
+        })
+
         if (this.props.vk !== undefined)
             return (
                 // (this.props.vk.photo !== "" && this.props.vk.name !== "" ) ?
-                    <Grid container className={this.props.classes.grid}>
-                        <Grid item xs={5}>
-                            <Avatar src={this.props.vk.photo} className={this.props.classes.bigAvatar} alt="user photo"/>
-                        </Grid>
-                        <Grid item xs={7}>
-                            <Grid container direction={"column"}>
-                                <InputBase type="text" className={`${this.props.classes.text} user_inp__name`}  defaultValue={ this.props.vk.name }/>
-                                <Grid item xs={12}>
-                                    <InputBase className={`user_inp__gitLogin ${this.props.classes.text}`} type="text" placeholder="введите Ваш логин github" defaultValue={this.props.github.gitLogin}/>
-                                    <ButtonBase className={this.props.classes.text} onClick={this.props.gitFetchUser}>{(!this.props.github.read)?"Добавить":"Изменить"}</ButtonBase>
-                                </Grid>
-                                <InputBase type="number" className={`user_inp__age ${this.props.classes.text}`} defaultValue={this.props.data.age}/>
-                                <InputBase type="text" className={`user_inp__address ${this.props.classes.text}`} defaultValue={this.props.data.address}/>
-                                <InputBase type="text" className={`user_inp__qual ${this.props.classes.text}`} defaultValue={  this.props.data.qual }/>
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={5}>
-                            <ButtonBase className={`${this.props.classes.text} saveBtn`} onClick={this.handleSave}>Сохранить</ButtonBase>
-                            <ButtonBase className={this.props.classes.text} onClick={this.deleteUserInfo}>Удалить портфолио</ButtonBase>
-                        </Grid>
-                    </Grid>
+                    <div className={"container"}>
+                        <div className={"container container-column"}>
+                            <Avatar src={this.props.vk.photo} id={"avatar_big"} alt="user photo"/>
+                            <div className={"container container-buttons"}>
+                                <Button variant="contained" className={`saveBtn`} onClick={this.handleSave}>Сохранить</Button>
+                                <Button variant="contained" onClick={this.deleteUserInfo}>Удалить портфолио</Button>
+                            </div>
+                        </div>
+                        <div className={"item-7"}>
+
+                            <form className={`container container-column`}>
+                                <Typography variant="h6">О себе</Typography>  
+                                <FilledInput type="text" className={`text user_inp__name`}  placeholder="имя" defaultValue={ this.props.vk.name }/>
+                                <FilledInput className={`user_inp__gitLogin text`} type="text" placeholder="логин github" defaultValue={this.props.github.gitLogin}/>
+                                    {/* <ButtonBase  onClick={this.props.gitFetchUser}>{(!this.props.github.read)?"Добавить":"Изменить"}</ButtonBase> */}
+                                <FilledInput type="number" placeholder="возраст" className={`user_inp__age text`} defaultValue={this.props.data.age}/>
+                                <FilledInput type="text" placeholder="адрес" className={`user_inp__address text`} defaultValue={this.props.data.address}/>
+                                <FilledInput type="text" placeholder="квалификация" className={`user_inp__qual  text`} defaultValue={  this.props.data.qual }/>
+                                
+                                <Typography variant="h6">Профессиональная информация</Typography>
+                                <Select isMulti onChange={this.handleChange} onInputChange={this.handleInputChange} value={this.state.langs} inputValue={this.state.inputValue} options={option}/>
+                                <Typography variant="h6">Контакты</Typography>
+                                <FilledInput type="phone" placeholder="телефон" className={`user_inp__phone text`} defaultValue={this.props.data.phone}/>
+                                <FilledInput type="mail" placeholder="почта" className={`user_inp__mail text`} defaultValue={this.props.data.mail}/>
+                            </form>
+                        </div>
+                       
+                    </div>
                     // :
                     // <div>Зарегистрироваться</div>
             )
@@ -79,5 +104,5 @@ class User extends React.Component{
     }
 }
 
-export default withStyles(theme)(User)
+export default User
 

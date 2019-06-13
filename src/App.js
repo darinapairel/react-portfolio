@@ -15,7 +15,6 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
-import LinkUI from '@material-ui/core/Link'
 
 class App extends Component {
 
@@ -32,15 +31,19 @@ class App extends Component {
             data:{
                 fetching: false,
                 name: "",
-                age: '',
+                age: "",
                 address: "",
                 qual: "",
                 bio: "",
+                phone: "",
+                mail:"",
+                pLangs: ["JavaScript","Python", "C++"],
+                langs:[]
             },
             vk: {
                 name: '',
                 photo: '',
-                read:false,
+                read: false,
                 id: ''
             },
             github: {
@@ -54,6 +57,7 @@ class App extends Component {
 
         this.getLocation = this.getLocation.bind(this)
         this.viewPortfolio = this.viewPortfolio.bind(this)
+        this.deleteRepo = this.deleteRepo.bind(this)
     }
 
     getLocation(userData, localKey){
@@ -117,47 +121,39 @@ class App extends Component {
     }
 
     VKOnAuth = (data) => {
-
-        let newVk = {...this.state.vk};
-        let userData = this.state;
+        let newVk = {...this.state.vk}
+        let userData = this.state
 
         newVk.name =`${data['first_name']} ${data['last_name']}`
         newVk.photo = data['photo']
-        newVk.read = true;
-        newVk.id = data.uid;
+        newVk.read = true
+        newVk.id = data.uid
 
         if (localStorage[`user_${newVk.id}`] === undefined){
             localStorage[`user_${newVk.id}`] = JSON.stringify({...this.state, vk: newVk})
-            userData.vk = newVk;
+            userData.vk = newVk
         } else {
-
 
             try{
                 userData = JSON.parse(localStorage[`user_${newVk.id}`])
-                console.log('try userData', userData)
                 if (![null, undefined, ''].includes(userData.vk.name)){
-                    newVk.name = userData.vk.name;
+                    newVk.name = userData.vk.name
                 }
             }
             catch (e) {
                 userData = this.state
-                console.log('catch userData', userData)
             }
 
-            userData.vk = newVk; // Для перезаписи актуальных данных после авторизации
+            userData.vk = newVk // Для перезаписи актуальных данных после авторизации
 
             localStorage[`user_${newVk.id}`] = JSON.stringify(userData)
             this.getLocation(userData, `user_${newVk.id}`)
-
-
         }
 
         this.setState({...userData, current_uid: newVk.id, view_id: newVk.id})
-        //localStorage[`user_${newVk.id}`] = JSON.stringify(newVk);
-        console.log(this.state.vk)
     }
 
-    onSubmitUser = ({VKname, gitLogin, age, address, qual}) => {
+    onSubmitUser = ({VKname, gitLogin, age, address, qual, phone, mail, langs}) => {
 
         this.setState((state)=> {
 
@@ -168,7 +164,10 @@ class App extends Component {
             newState.data.age = age
             newState.data.address = address
             newState.data.qual= qual
-            console.log('this.state.current_uid', this.state.current_uid)
+            newState.data.phone = phone
+            newState.data.mail = mail
+            newState.data.langs = langs
+            console.log('this.state.data.langs', this.state.data.langs)
             try{
                 userData = JSON.parse(localStorage[`user_${this.state.current_uid}`])
             }
@@ -233,7 +232,6 @@ class App extends Component {
                 this.setState((state) => {
                     let newGithub = state.github
                     newGithub.gitRepos = json
-                    localStorage.setItem("gitRepos", JSON.stringify(json))
                     return {...state, github: newGithub}
                 })
                 let userData = {}
@@ -249,6 +247,17 @@ class App extends Component {
             })
     }
 
+    deleteRepo(repos, repo){
+        repos[repos.indexOf(repo)] = null
+        repos = repos.filter(((e)=>e!=null))
+         this.setState((state)=>{
+             let userInfo = {...state};
+             userInfo.github.gitRepos = repos
+             return {userInfo}
+         })
+        localStorage[`user_${this.state.current_uid}`] = JSON.stringify(this.state)
+    }
+
     viewPortfolio(id){
         if (this.state.current_uid === null && id === null){
             this.setState(this.initialState)
@@ -259,9 +268,19 @@ class App extends Component {
             this.setState(newState)
         }
     }
+    openMenu(){
+        let menu = document.getElementsByClassName("menu")[0]
+
+        menu.style.display !== "none"?
+            menu.style.display = "none"
+            :
+            menu.setAttribute("style",  "display:flex; width:100%; justify-content:space-around;")
+
+        
+    }
 
     render() {
-        const portfolio = () => <Portfolio
+        const portfolio = () => <Portfolio deleteRepo={this.deleteRepo}
                                         onSubmitUser={this.onSubmitUser}
                                         VKOnAuth={this.VKOnAuth}
                                         current_uid={this.state.current_uid}
@@ -271,7 +290,7 @@ class App extends Component {
                                         data={this.state.data}
                                 />
 
-        const  portfolioList = ()=> <PortfolioList viewPortfolio={this.viewPortfolio}/>
+        const  portfolioList = ()=> <PortfolioList viewPortfolio={this.viewPortfolio} current_uid={this.state.current_uid}/>
 
         return (
 
@@ -281,15 +300,15 @@ class App extends Component {
                     <div >
                         <AppBar position={"static"}>
                             <Toolbar className={`${this.props.classes.flex} ${this.props.classes.flexSpaceBetween}`}>
-                                <IconButton color="inherit" aria-label="Menu">
+                                <IconButton className="open-menu-button" onClick={this.openMenu} color="inherit" aria-label="Menu">
                                     <MenuIcon/>
                                 </IconButton>
-                                <Typography className={this.props.classes.text} variant="subtitle1">Генератор портфолио</Typography>
-                                <Link className={`${this.props.classes.text} ${this.props.classes.link}`} to="/list"><Typography variant="subtitle1" color="inherit" >Список портфолио</Typography></Link>
-                                <Link onClick={() => {this.viewPortfolio(this.state.current_uid)}} className={`${this.props.classes.text} ${this.props.classes.link}` } to="/"><Typography variant="subtitle1" color="inherit" >Мое портфолио</Typography></Link>
-                                <LinkUI className={`${this.props.classes.text} ${this.props.classes.link}`} href="#home">Главная</LinkUI>
-                                <LinkUI className={`${this.props.classes.text} ${this.props.classes.link}`} href="#about">Обо мне</LinkUI>
-                                <LinkUI className={`${this.props.classes.text} ${this.props.classes.link}`} href="#contact">Контакты</LinkUI>
+                                <div className={`menu`} style={{display:"flex", width:"100%", justifyContent:"space-around"}}>
+                                    <Typography className={this.props.classes.text} variant="subtitle1">Генератор портфолио</Typography>
+                                    <Link className={`${this.props.classes.text} ${this.props.classes.link}`} to="/list"><Typography variant="subtitle1" color="inherit" >Список портфолио</Typography></Link>
+                                    <Link onClick={() => {this.viewPortfolio(this.state.current_uid)}} className={`${this.props.classes.text} ${this.props.classes.link}` } to="/"><Typography variant="subtitle1" color="inherit" >Мое портфолио</Typography></Link>
+
+                                </div>
                             </Toolbar>
                         </AppBar>
                         <div className={this.props.classes.body}>

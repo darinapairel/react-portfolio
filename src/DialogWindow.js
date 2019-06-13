@@ -19,7 +19,7 @@ class DialogWindow extends React.Component{
             <div>
                 <Button ref={'dialog__open'}  onClick={this.btnOpen} className={`dialog__open ${styleForButton}`}>{btnText}</Button>
                 <dialog ref={'dialog'} className={`dialog__animation`}>
-                    <Button ref={'dialog__close'} onClick={this.btnClose} className={`dialog__close`}><Close className={this.props.classes.text}/></Button>
+                    <Button ref={'dialog__close'} onClick={this.btnClose} className={`dialog__close`}><Close/></Button>
                     {childElm}
                 </dialog>
             </div>
