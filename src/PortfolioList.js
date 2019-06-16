@@ -14,6 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 class PortfolioList extends React.Component{
 
+
     constructor(props){
         super(props)
 
@@ -37,7 +38,9 @@ class PortfolioList extends React.Component{
         }
         this.searchHandle = this.searchHandle.bind(this)
         this.selectHandle = this.selectHandle.bind(this)
+
     }
+
 
     isInStr(str, substr){
         if(typeof (str) === 'string' && typeof (substr) === 'string'){
@@ -82,6 +85,7 @@ class PortfolioList extends React.Component{
                 <div className={`${classes.flex} ${classes.flexSpaceBetween}`}>
                     <div>
                         {this.state.filteredData.map((item, i) =>  !item.vk.name? null:<PortfolioItem key={i} viewPortfolio={this.props.viewPortfolio} item = {item} /> )}
+
                     </div>
                     <Map data = {this.state.filteredData}/>
                 </div>

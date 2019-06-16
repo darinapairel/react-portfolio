@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from "react-router-dom"
+import { Link, generatePath } from "react-router-dom"
 
 // material-ui imports
 import Card from '@material-ui/core/Card';
@@ -15,8 +15,9 @@ import { withStyles } from '@material-ui/core/styles';
 function PortfolioItem(props){
 
     return(
-
-        <Link onClick={()=>{props.viewPortfolio(props.item.vk.id)}} to={`/`}>
+        <Link onClick={()=>{props.viewPortfolio(props.item.vk.id)}} to={generatePath("/:id", {id:props.item.vk.id})}>
+            {/*generatePath("/:id", {id:props.item.vk.id})*/}
+            {/*<Route path={`/:id`} component={Portfolio}></Route>*/}
             <Card className={`${props.classes.flex} ${props.classes.card}`}>
                 <div className={`${props.classes.flex} ${props.classes.flexCol}`}>
                     <CardContent className={props.classes.cardContent}>

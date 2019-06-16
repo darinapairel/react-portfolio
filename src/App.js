@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
-import { HashRouter as Router, Route, Link } from "react-router-dom"
+import { HashRouter as Router, Route, Link, Switch } from "react-router-dom"
 
 // component imports
 import Portfolio from './Portfolio'
 import PortfolioList from './PortfolioList'
+import VkAuth from './VkAuth'
+import DialogWindow from './DialogWindow'
+
 
 
 // material-ui imports
@@ -291,7 +294,6 @@ class App extends Component {
                                 />
 
         const  portfolioList = ()=> <PortfolioList viewPortfolio={this.viewPortfolio} current_uid={this.state.current_uid}/>
-
         return (
 
                 <Router>
@@ -307,13 +309,17 @@ class App extends Component {
                                     <Typography className={this.props.classes.text} variant="subtitle1">Генератор портфолио</Typography>
                                     <Link className={`${this.props.classes.text} ${this.props.classes.link}`} to="/list"><Typography variant="subtitle1" color="inherit" >Список портфолио</Typography></Link>
                                     <Link onClick={() => {this.viewPortfolio(this.state.current_uid)}} className={`${this.props.classes.text} ${this.props.classes.link}` } to="/"><Typography variant="subtitle1" color="inherit" >Мое портфолио</Typography></Link>
-
+                                    {/*<Link onClick={() => {this.viewPortfolio(this.state.current_uid)}} className={`${this.props.classes.text} ${this.props.classes.link}` } to="/"><Typography variant="subtitle1" color="inherit" >Мое портфолио</Typography></Link>*/}
                                 </div>
                             </Toolbar>
                         </AppBar>
                         <div className={this.props.classes.body}>
+
                             <Route path="/" exact render={portfolio}/>
-                            <Route path="/list" render={portfolioList}/>
+                            <Switch>
+                            <Route path="/list" exact render={portfolioList}/>
+                            <Route path="/:id" exact render={portfolio}/>
+                            </Switch>
                         </div>
                     </div>
                     </MuiThemeProvider>
