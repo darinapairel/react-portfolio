@@ -1,3 +1,6 @@
+## The same diploma project as at the second university git account: https://github.com/darinapairel97/darinapairel97.github.io
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
